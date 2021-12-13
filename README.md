@@ -16,6 +16,10 @@
 
 ### 7. others 样式、右侧icon、插槽...
 
+### 8. 异步菜单
+
+
+
 ## 问题
 
 ### 1. item递归的位置
@@ -25,4 +29,10 @@
 当前版本是在item内部递归，目的是：item和group的逻辑拆分开来，item负责根据数据显示，group负责处理数据，缺点：可能让人看着不爽
 
 ### 2. 通过provide/inject 实现子通知父 隐患？
+
+### 3. vmodel绑定显示/隐藏 of key
+
+
+
+activeKeys 
 

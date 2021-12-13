@@ -1,5 +1,5 @@
 <template>
-  <var-popup position="left" v-model:show="isShowPopup">
+  <var-popup :position="position" v-model:show="isShowPopup">
     <div class="sider">
       <NavMenuItem :data="menuData" @onChange="onChange" />
     </div>
@@ -7,13 +7,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, provide, reactive, ref, toRaw } from "vue";
+import { defineComponent, provide, reactive, ref, toRaw, watch } from "vue";
 import NavMenuItem from "./NavMenuItem.vue";
 import { initMenuData, findKeys, updatePathByKey } from "./utils";
 import { MenuItem } from "./types";
 
 export default defineComponent({
   name: "NavMenu",
+  inheritAttrs: false,
   components: {
     NavMenuItem,
   },
@@ -22,7 +23,7 @@ export default defineComponent({
       type: Array,
       default: () => [],
     },
-    modelValue: {
+    activeKey: {
       type: [String, Number],
       default: null,
     },
@@ -30,15 +31,28 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    position: {
+      type: String,
+      default: "left",
+    },
+    show: {
+      type: Boolean,
+      default: false,
+    },
   },
-  emit: ["onMenuChange"],
+  emit: ["onMenuChange", "update:show"],
   setup(props, { emit }) {
-
     const isShowPopup = ref(true);
     const menuData = reactive(props.options);
 
     initMenuData(menuData as MenuItem[]);
-    updatePathByKey(menuData as MenuItem[], props.modelValue);
+    updatePathByKey(menuData as MenuItem[], props.activeKey);
+
+    watch(isShowPopup, (v) => void emit("update:show", v));
+    watch(
+      () => props.show,
+      (v) => (isShowPopup.value = v)
+    );
 
     const onChange = (changeItem: MenuItem) => {
       const openKeys = findKeys(menuData as MenuItem[]);

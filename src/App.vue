@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ref } from "@vue/reactivity";
+import { watch } from "@vue/runtime-core";
 import NavMenu from "./components/NavMenu.vue";
 import type { MenuItemKey, MenuItem } from "./components/types";
 const options = [
@@ -78,14 +80,22 @@ const options = [
 const onMenuChange = (openKeys: MenuItemKey[], changeItem: MenuItem) => {
   console.log(openKeys, changeItem);
 };
-const key = "1-2-2";
+
+const handleClick = () => {
+  console.log(options);
+};
+const show = ref(true);
+const openkey = "1-2-2";
 </script>
 
 <template>
   <NavMenu
     :options="options"
+    :activeKey="openkey"
+    v-model:show="show"
     @onMenuChange="onMenuChange"
-    v-model="key"
+    position="left"
     accordion
   />
+  <var-button @click="show = !show">点击</var-button>
 </template>
